@@ -3,6 +3,9 @@ description: "Building with Docker"
 runs:
   using: composite
   steps:
-    - name: List docker image 
-      shell: bash
-      run: docker image ls | grep $(date +%d-%m-%y) | head -1
+  - name: Build Dockerfile
+    shell: bash
+    run: docker build . --file src/main/docker/Dockerfile.jvm --tag academy:$(date +%d-%m-%y)
+  - name: List docker image 
+    shell: bash
+    run: docker image ls | grep $(date +%d-%m-%y) | head -1

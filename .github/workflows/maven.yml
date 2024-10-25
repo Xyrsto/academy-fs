@@ -26,6 +26,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: xyrsto/academy-fs/.github/actions/maven_build@main
-    - uses: xyrsto/academy-fs/.github/actions/docker_build@main 
-    - name: List docker image 
-      run: docker image ls | grep $(date +%d-%m-%y) | head -1
+    - uses: xyrsto/academy-fs/.github/actions/docker_build@main

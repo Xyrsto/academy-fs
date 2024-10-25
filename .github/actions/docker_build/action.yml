@@ -3,11 +3,11 @@ description: "Build Docker image with specified name and tag."
 inputs:
   path_dockerfile:
     description: "Path to Dockerfile"
-    required: true
+    required: false
     default: 'Dockerfile'
   image_name:
     description: "Docker image name"
-    required: true
+    required: false
   tag_name:
     description: "Docker image tag"
     required: false

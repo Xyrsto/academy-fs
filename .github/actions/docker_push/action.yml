@@ -22,7 +22,7 @@ runs:
     - name: Tag Docker Image
       shell: bash
       run: |
-        # Tag the image with the username
+        # Ensure IMAGE_NAME and TAG are set correctly
         TAGGED_IMAGE="${{ inputs.docker_username }}/${{ inputs.image_name }}"
         docker tag "${{ env.IMAGE_NAME }}:${{ env.TAG }}" "${TAGGED_IMAGE}"
         echo "TAGGED_IMAGE=${TAGGED_IMAGE}" >> $GITHUB_ENV

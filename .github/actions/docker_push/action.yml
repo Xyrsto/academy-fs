@@ -4,6 +4,9 @@ inputs:
   docker_username:
     description: "Docker username"
     required: true
+  docker_password:
+    description: "Docker password"
+    required: true
   image_name:
     description: "Full name of the Docker image (with tag)"
     required: true
@@ -14,8 +17,8 @@ runs:
     - name: Log in to Docker Hub
       shell: bash
       run: |
-        echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ inputs.docker_username }}" --password-stdin
-        
+        echo "${{ inputs.docker_password }}" | docker login -u "${{ inputs.docker_username }}" --password-stdin
+
     - name: Tag Docker Image
       shell: bash
       run: |
@@ -23,7 +26,7 @@ runs:
         TAGGED_IMAGE="${{ inputs.docker_username }}/${{ inputs.image_name }}"
         docker tag "${{ env.IMAGE_NAME }}:${{ env.TAG }}" "${TAGGED_IMAGE}"
         echo "TAGGED_IMAGE=${TAGGED_IMAGE}" >> $GITHUB_ENV
-        
+
     - name: Push Docker Image
       shell: bash
       run: |

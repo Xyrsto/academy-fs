@@ -1,11 +1,32 @@
 name: "Build with Docker"
 description: "Building with Docker"
+inputs:
+  path_dockerfile:
+    description: Path to Dockerfile
+    required: true
+    default: "Dockerfile"
+  image_name:
+    description: Docker image
+    required: true
+  tag_name:
+    description: Docker image tag
+    required: false
 runs:
   using: composite
   steps:
-  - name: Build Dockerfile
-    shell: bash
-    run: docker build . --file src/main/docker/Dockerfile.jvm --tag academy:$(date +%d-%m-%y)
-  - name: List docker image 
-    shell: bash
-    run: docker image ls | grep $(date +%d-%m-%y) | head -1
+    - name: Set Docker tag
+      shell: bash
+      run: |
+        if [ -z "${{ inputs.tag_name }}" ]; then
+          echo "TAG=$(date +%d-%m-%y)" >> $GITHUB_ENV
+        else
+          echo "TAG=${{ inputs.tag_name }}" >> $GITHUB_ENV
+        fi
+    - name: Build Dockerfile
+      shell: bash
+      run: |
+        docker build . --file "${{ inputs.path_dockerfile }}" --tag "${{ inputs.image_name }}:${{ env.TAG }}"
+        echo "DOCKER_IMAGE_NAME=${{ inputs.image_name }}:$TAG" >> $GITHUB_ENV
+    - name: List Docker image
+      shell: bash
+      run: docker image ls | grep "${{ inputs.image_name }}" | grep "${{ env.TAG }}" | head -1

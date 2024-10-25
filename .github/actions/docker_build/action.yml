@@ -20,7 +20,7 @@ runs:
       run: |
         # If tag_name is not provided, use Unix timestamp
         if [ -z "${{ inputs.tag_name }}" ]; then
-          echo "TAG=$(date +%s)" >> $GITHUB_ENV
+          echo "TAG=$(date +%d-%m-%y)" >> $GITHUB_ENV
         else
           echo "TAG=${{ inputs.tag_name }}" >> $GITHUB_ENV
         fi
@@ -28,10 +28,10 @@ runs:
     - name: Build Docker Image
       shell: bash
       run: |
-        docker build . --file "${{ inputs.path_dockerfile }}" --tag "${{ inputs.image_name }}:$TAG"
+        docker build . --file "${{ inputs.path_dockerfile }}" --tag "${{ inputs.image_name }}:${{env.TAG}}"
         # Export the full image name with tag to DOCKER_IMAGE_NAME
-        echo "DOCKER_IMAGE_NAME=${{ inputs.image_name }}:$TAG" >> $GITHUB_ENV
+        echo "DOCKER_IMAGE_NAME=${{ inputs.image_name }}:${{env.TAG}}" >> $GITHUB_ENV
 
     - name: List Docker Image
       shell: bash
-      run: docker image ls | grep "${{ inputs.image_name }}:$TAG" | head -1
+      run: docker image ls | grep "${{ inputs.image_name }}:${{env.TAG}}" | head -1

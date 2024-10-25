@@ -45,5 +45,5 @@ jobs:
         uses: xyrsto/academy-fs/.github/actions/docker_push@main
         with:
           docker_username: ${{secrets.DOCKERHUB_USERNAME}}
-          docker_password: ${{secrets.DOCKERHUB_TOKEN}}
+          docker_token: ${{secrets.DOCKERHUB_TOKEN}}
           image_name: ${{ env.IMAGE_NAME }}:${{ env.TAG }}

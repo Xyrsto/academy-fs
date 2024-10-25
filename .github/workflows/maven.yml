@@ -1,35 +1,49 @@
 name: Java CI with Maven
 
 on:
+  workflow_dispatch:
+    inputs:
+      path_dockerfile:
+        description: Path to Dockerfile
+        type: string
+        required: true
+        default: "Dockerfile"
+      image_name:
+        description: Docker image
+        required: true
+      tag_name:
+        description: Docker image tag
+        required: false
+
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     services:
-          postgres:
-            image: postgres:latest
-            env:
-              POSTGRES_USER: postgresuser
-              POSTGRES_PASSWORD: mysecretpassword
-              POSTGRES_DB: postgres
-            ports:
-              - 5432:5432
-            options: >-
-              --health-cmd "pg_isready -U postgres"
-              --health-interval 10s
-              --health-timeout 5s
-              --health-retries 5
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgresuser
+          POSTGRES_PASSWORD: mysecretpassword
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
-    - uses: actions/checkout@v4
-    - name: Maven Build
-      uses: xyrsto/academy-fs/.github/actions/maven_build@main
-    - name: Docker Build
-      uses: xyrsto/academy-fs/.github/actions/docker_build@main
-      with:
-        path_dockerfile: src/main/docker/Dockerfile.jvm
-        image_name: 'academy'
-        tag_name: ''
+      - uses: actions/checkout@v4
+      - name: Maven Build
+        uses: xyrsto/academy-fs/.github/actions/maven_build@main
+      - name: Docker Build
+        uses: xyrsto/academy-fs/.github/actions/docker_build@main
+        with:
+          path_dockerfile: ${{inputs.path_dockerfile}}
+          image_name: ${{inputs.image_name}}
+          tag_name: ${{inputs.tag_name}}

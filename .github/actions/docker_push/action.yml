@@ -20,7 +20,10 @@ runs:
         username: ${{ inputs.docker_username }}
         password: ${{ inputs.docker_token }}
     - name: Tag Docker Image
-      run: docker tag ${{ inputs.image_name }} ${{ inputs.docker_username }}/${{ inputs.image_name }}
+      run: |
+        echo ${{ inputs.image_name }}
+        echo ${{ inputs.docker_username }}/${{ inputs.image_name }}
+        docker tag ${{ inputs.image_name }} ${{ inputs.docker_username }}/${{ inputs.image_name }}
       shell: bash
     - name: Push Docker Image
       run: docker push ${{ inputs.docker_username }}/${{ inputs.image_name }}

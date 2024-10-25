@@ -1,0 +1,31 @@
+name: "Docker Image Push"
+description: "Pushes the docker image to Docker Hub"
+inputs:
+  docker_username:
+    description: "Docker username"
+    required: true
+  image_name:
+    description: "Full name of the Docker image (with tag)"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Log in to Docker Hub
+      shell: bash
+      run: |
+        echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ inputs.docker_username }}" --password-stdin
+        
+    - name: Tag Docker Image
+      shell: bash
+      run: |
+        # Tag the image with the username
+        TAGGED_IMAGE="${{ inputs.docker_username }}/${{ inputs.image_name }}"
+        docker tag "${{ env.IMAGE_NAME }}:${{ env.TAG }}" "${TAGGED_IMAGE}"
+        echo "TAGGED_IMAGE=${TAGGED_IMAGE}" >> $GITHUB_ENV
+        
+    - name: Push Docker Image
+      shell: bash
+      run: |
+        # Push the tagged image to Docker Hub
+        docker push "${TAGGED_IMAGE}"

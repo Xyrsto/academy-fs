@@ -1,0 +1,14 @@
+name: "Build with Maven"
+description: "Building with maven"
+runs:
+  using: composite
+  steps:
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      shell: bash
+      run: mvn -B package --file pom.xml

@@ -15,6 +15,20 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Set Dockerfile Path 
+      shell: bash
+      run: | 
+        if [ -z "${{ inputs.path_dockerfile }}" ]; then
+          echo "PATH_DOCKERFILE=src/main/docker/Dockerfile.jvm" >> $GITHUB_ENV
+        else 
+          echo "PATH_DOCKERFILE={{ inputs.path_dockerfile }} >> $GITHUB_ENV"
+    - name: Set Docker Image Name 
+      shell: bash
+      run: | 
+        if [ -z "${{ inputs.image_name }}" ]; then
+          echo "IMAGE_NAME=academy" >> $GITHUB_ENV
+        else 
+          echo "IMAGE_NAME={{ inputs.image_name }}"  >> $GITHUB_ENV
     - name: Set Docker Tag
       shell: bash
       run: |
@@ -28,10 +42,10 @@ runs:
     - name: Build Docker Image
       shell: bash
       run: |
-        docker build . --file "${{ inputs.path_dockerfile }}" --tag "${{ inputs.image_name }}:${{env.TAG}}"
+        docker build . --file "${{ env.PATH_DOCKERFILE }}" --tag "${{ env.IMAGE_NAME }}:${{env.TAG}}"
         # Export the full image name with tag to DOCKER_IMAGE_NAME
-        echo "DOCKER_IMAGE_NAME=${{ inputs.image_name }}:${{env.TAG}}" >> $GITHUB_ENV
+        echo "DOCKER_IMAGE_NAME=${{ env.IMAGE_NAME }}:${{env.TAG}}" >> $GITHUB_ENV
 
     - name: List Docker Image
       shell: bash
-      run: docker image ls | grep "${{ inputs.image_name }}:${{env.TAG}}" | head -1
+      run: docker image ls | grep "${{ env.IMAGE_NAME }}:${{env.TAG}}" | head -1
